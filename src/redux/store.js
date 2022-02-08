@@ -5,10 +5,11 @@ import { loadState,saveState } from 'utils/localStorage/load_push_State';
 const store = configureStore({
   devTools:true,
     reducer: contactsReducer,
-    preloadedState: loadState()
+    preloadedState:{contacts:loadState(),filter:''}
 });
 
 store.subscribe(() => {
+  
   saveState(
     store.getState()
   );

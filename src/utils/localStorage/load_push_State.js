@@ -1,18 +1,18 @@
 export const loadState = () => {
   try {
-    const serializedState = localStorage.getItem('state');
+    const serializedState = localStorage.getItem('contacts');
     if (serializedState === null) {
-      return undefined;
+      return [];
     }
     return JSON.parse(serializedState);
   } catch (err) {
-    return undefined;
+    return [];
   }
 }; 
-export const saveState = (state) => {
+export const saveState = ({contacts}) => {
   try {
-    const serializedState = JSON.stringify(state);
-    localStorage.setItem('state', serializedState);
+    const serializedState = JSON.stringify(contacts);
+    localStorage.setItem('contacts', serializedState);
   } catch {
     // ignore write errors
   }

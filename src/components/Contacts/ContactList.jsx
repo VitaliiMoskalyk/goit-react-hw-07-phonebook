@@ -1,16 +1,39 @@
-import propTypes, { object } from "prop-types";
-import ContactItem from "./ContactItem";
+import ContactItem from './ContactItem';
+import { useDispatch, useSelector } from 'react-redux';
+import * as actions from '../../redux/contacts/contacts-actions';
+import toast from 'react-hot-toast';
+import { ConfirmDelete } from '../confirmDelete/ConfirmDelete';
 
-const ContactList = ({ contacts, deleteFunction2 }) => {
+const ContactList = () => {
+  const contacts = useSelector(({ contacts }) => contacts);
+  const filter = useSelector(({ filter }) => filter);
+  const dispatch = useDispatch();
+
+  const deleteContacts = id => {
+    toast(
+      <ConfirmDelete onClick={() => dispatch(actions.deleteContact(id))} />,
+      {
+        id: 'clipboard',
+      }
+    );
+  };
+
+  const findForFilter = () =>
+    contacts.filter(({ name }) =>
+      name.toLowerCase().includes(filter.toLowerCase())
+    );
+
+  const visibleSearch = findForFilter();
+
   return (
     <>
       <h2>Contacts</h2>
-      {contacts.length > 0 ? (
-        contacts.map((contact) => (
+      {visibleSearch.length > 0 ? (
+        visibleSearch.map(contact => (
           <ol key={contact.id}>
             <ContactItem
               contact={contact}
-              deleteFunction={() => deleteFunction2(contact.id)}
+              deleteFunction={() => deleteContacts(contact.id)}
             />
           </ol>
         ))
@@ -19,11 +42,6 @@ const ContactList = ({ contacts, deleteFunction2 }) => {
       )}
     </>
   );
-};
-
-ContactList.propTypes = {
-  contacts: propTypes.arrayOf(object).isRequired,
-  deleteFunction2: propTypes.func.isRequired,
 };
 
 export default ContactList;
