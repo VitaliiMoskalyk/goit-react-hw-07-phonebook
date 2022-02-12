@@ -1,19 +1,24 @@
 import { configureStore } from '@reduxjs/toolkit';
 import contactsReducer from './contacts/contacts-reduser';
-import { loadState,saveState } from 'utils/localStorage/load_push_State';
+import {contactsApi} from '../utils/backend/contactsApi'
+
 
 const store = configureStore({
-  devTools:true,
-    reducer: contactsReducer,
-    preloadedState:{contacts:loadState(),filter:''}
+  
+  reducer: {
+    filter:contactsReducer,
+      [contactsApi.reducerPath]:contactsApi.reducer,
+  },
+  middleware:getDefaultMiddleware=>getDefaultMiddleware().concat(contactsApi.middleware)
+    // preloadedState:{contacts:[],filter:''}
 });
 
-store.subscribe(() => {
+// store.subscribe(() => {
   
-  saveState(
-    store.getState()
-  );
-});
+//   saveState(
+//     store.getState()
+//   );
+// });
 
 
 export default store

@@ -1,44 +1,50 @@
 import ContactItem from './ContactItem';
-import { useDispatch, useSelector } from 'react-redux';
-import * as actions from '../../redux/contacts/contacts-actions';
+import { useSelector } from 'react-redux';
 import toast from 'react-hot-toast';
 import { ConfirmDelete } from '../confirmDelete/ConfirmDelete';
+import Filter from 'components/Filter';
+import {
+  useGetContactsQuery,
+  useDeleteContactMutation,
+} from '../../utils/backend/contactsApi';
 
 const ContactList = () => {
-  const contacts = useSelector(({ contacts }) => contacts);
+  const { data, error, isFetching } = useGetContactsQuery('users');
   const filter = useSelector(({ filter }) => filter);
-  const dispatch = useDispatch();
+
+  const [deleteContact] = useDeleteContactMutation();
 
   const deleteContacts = id => {
-    toast(
-      <ConfirmDelete onClick={() => dispatch(actions.deleteContact(id))} />,
-      {
-        id: 'clipboard',
-      }
-    );
+    toast(<ConfirmDelete onClick={() => deleteContact(id)} />, {
+      id: 'clipboard',
+    });
   };
 
   const findForFilter = () =>
-    contacts.filter(({ name }) =>
+    data.filter(({ name }) =>
       name.toLowerCase().includes(filter.toLowerCase())
     );
-
-  const visibleSearch = findForFilter();
 
   return (
     <>
       <h2>Contacts</h2>
-      {visibleSearch.length > 0 ? (
-        visibleSearch.map(contact => (
-          <ol key={contact.id}>
-            <ContactItem
-              contact={contact}
-              deleteFunction={() => deleteContacts(contact.id)}
-            />
-          </ol>
-        ))
-      ) : (
-        <p>no contacts</p>
+      {isFetching && <p>Loading</p>}
+      {error && <p>/{error.status}</p>}
+      {data && (
+        <>
+          <Filter />
+          {findForFilter().length === 0 && <p>you don`t have contacts</p>}
+          <ul>
+            {findForFilter().map(contact => (
+              <li key={contact.createdAt}>
+                <ContactItem
+                  contact={contact}
+                  deleteFunction={deleteContacts}
+                />
+              </li>
+            ))}
+          </ul>
+        </>
       )}
     </>
   );

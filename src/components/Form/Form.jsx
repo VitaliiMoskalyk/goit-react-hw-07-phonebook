@@ -1,36 +1,38 @@
 import { useState } from 'react';
-import { nanoid } from 'nanoid';
 import { FormWrapper, FormButton } from './Form.styled';
-import { useDispatch, useSelector } from 'react-redux';
 import toast from 'react-hot-toast';
-import * as actions from '../../redux/contacts/contacts-actions';
+import {
+  useAddContactMutation,
+  useGetContactsQuery,
+} from '../../utils/backend/contactsApi';
 
 const Form = () => {
   const [name, setName] = useState('');
-  const [number, setNumber] = useState('');
+  const [phone, setPhone] = useState('');
 
-  const dispatch = useDispatch();
-  const contacts = useSelector(({ contacts }) => contacts);
+  const [updatePost] = useAddContactMutation();
+  const { data } = useGetContactsQuery();
 
-  const onSubmitForm = data => {
-    const contactName = data.name;
+  const onSubmitForm = result => {
+    const contactName = result.name;
     const normolizeData = contactName.toLowerCase();
-    contacts.find(contact => contact.name.toLowerCase() === normolizeData)
+    data.find(contact => contact.name.toLowerCase() === normolizeData)
       ? toast.error(`${contactName} is already in contacts`)
-      : dispatch(actions.addContact(data));
+      : updatePost(result);
   };
 
   const contactsAdder = evt => {
     evt.preventDefault();
-    const newContact = generateContact(name, number);
+    const newContact = generateContact(name, phone);
     onSubmitForm(newContact);
     setName('');
-    setNumber('');
+    setPhone('');
   };
 
-  const generateContact = (name, number) => {
-    return { name, number, id: nanoid(4) };
+  const generateContact = (name, phone) => {
+    return { name, phone };
   };
+
   return (
     <FormWrapper onSubmit={contactsAdder}>
       <label htmlFor={name}>
@@ -47,10 +49,10 @@ const Form = () => {
         />
       </label>
 
-      <label htmlFor={number}>
+      <label htmlFor={phone}>
         <input
-          value={number}
-          onChange={evt => setNumber(evt.target.value)}
+          value={phone}
+          onChange={evt => setPhone(evt.target.value)}
           type="tel"
           autoComplete="off"
           placeholder="+3805098765432"

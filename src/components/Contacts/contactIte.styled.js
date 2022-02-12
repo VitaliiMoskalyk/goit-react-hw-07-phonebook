@@ -1,19 +1,24 @@
 import styled from "@emotion/styled";
 
 export const ItemWrapper = styled.div`
-margin: 0;
-padding: 0;
+margin: 5px;
+padding: 5px;
 display: flex;
 justify-content:space-between;
 align-items:center;
-min-width:250px;
+min-width:289px;
+min-height:70px;
+
+border-radius:50px;
+
+background-color: rgba(101, 148, 148, 0.171);
 `
 
 export const Image = styled.img`
 width:50px;
+height:50px;
 border-radius:50px;
 padding:2px;
-
 `
 
 export const Name = styled.p`
@@ -45,6 +50,6 @@ border-radius:50px;
 outline:none;
 border:none;
 overflow:hidden;
-
+cursor: pointer;
 background-color:#b1bbdb
 `

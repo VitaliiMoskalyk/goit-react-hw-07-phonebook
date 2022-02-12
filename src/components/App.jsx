@@ -10,8 +10,8 @@ export const App = () => {
       <div className="form-wrapper">
         <h1>Phonebook</h1>
         <Form />
-        <Filter />
       </div>
+
       <ContactList />
     </section>
   );

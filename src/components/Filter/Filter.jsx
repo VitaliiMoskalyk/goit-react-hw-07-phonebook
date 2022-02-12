@@ -16,7 +16,7 @@ const Filter = () => {
         placeholder="Find contact"
         value={filter}
         onChange={e => filterChanger(e)}
-      ></input>
+      />
     </label>
   );
 };

@@ -10,14 +10,14 @@ import {
 } from './contactIte.styled';
 
 const ContactItem = ({ contact, deleteFunction }) => {
-  const { id, name, number } = contact;
+  const { id, name, phone, avatar = defaultImage } = contact;
 
   return (
     <ItemWrapper>
-      <Image src={defaultImage} alt={name} />
+      <Image src={avatar} alt={name} />
       <FlexContact>
         <Name>{name}</Name>
-        <Number>{number}</Number>
+        <Number>{phone}</Number>
       </FlexContact>
       <Button type="button" onClick={() => deleteFunction(id)}>
         X
