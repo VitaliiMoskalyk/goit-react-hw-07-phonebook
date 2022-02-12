@@ -27,7 +27,7 @@ const ContactList = () => {
 
   return (
     <>
-      <h2>Contacts</h2>
+      <h2>Contacts </h2>
       {isFetching && <p>Loading</p>}
       {error && <p>/{error.status}</p>}
       {data && (
